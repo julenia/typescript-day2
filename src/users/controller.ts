@@ -1,16 +1,20 @@
 import User from './entity'
-import { JsonController, Get, Param, Put, Body, Post, HttpCode, NotFoundError } from 'routing-controllers'
+import { JsonController, Get, Param, Put, Body, Post, NotFoundError, Authorized } from 'routing-controllers'
 
 @JsonController()
-export default class PageController {
+export default class UserController {
 
+  
   @Post('/users')
-  @HttpCode(201)
-  createPage(
+  async createUser(
     @Body() user: User
   ) {
-    return user.save()
+    const {password, ...rest} = user
+    const entity = User.create(rest)
+    await entity.setPassword(password)
+    return entity.save()
   }
+  
 
   @Get('/users')
   async allUsers(){
@@ -24,7 +28,7 @@ export default class PageController {
     ): Promise<User | undefined> {
         return User.findOne(id)
     }
-
+    @Authorized()
     @Put('/users/:id')
     async updateUser(
     @Param('id') id: number,
