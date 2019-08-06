@@ -30,7 +30,7 @@ export default class PageController {
     }
 
     @Put('/pages/:id')
-async updatePage(
+  async updatePage(
   @Param('id') id: number,
   @Body() update: Partial<Page>
 ) {
@@ -39,8 +39,4 @@ async updatePage(
 
   return Page.merge(page, update).save()
 }
-    
-
-    
-
 }
